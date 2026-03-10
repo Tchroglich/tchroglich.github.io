@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tchroglich — A WIP Artlang</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --green: #1a4a2e;
+    --green-mid: #2d6b45;
+    --green-light: #4a9660;
+    --gold: #c8a84b;
+    --gold-light: #e8c96a;
+    --cream: #f5f0e8;
+    --dark: #0d1f14;
+    --ink: #1c1c1c;
+    --muted: #6b7c6e;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: var(--dark);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(26,74,46,0.35) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 90%, rgba(26,74,46,0.25) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; padding: 0 2rem 6rem; }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 5rem 0 3rem;
+    position: relative;
+  }
+  .hero::after {
+    content: '';
+    display: block;
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 2.5rem auto 0;
+  }
+  .emblem {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 30px rgba(200,168,75,0.2), 0 0 60px rgba(26,74,46,0.4);
+    animation: glowPulse 4s ease-in-out infinite;
+    overflow: hidden;
+  }
+  .emblem img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+  }
+  @keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 30px rgba(200,168,75,0.2), 0 0 60px rgba(26,74,46,0.4); }
+    50% { box-shadow: 0 0 50px rgba(200,168,75,0.4), 0 0 90px rgba(26,74,46,0.5); }
+  }
+  .emblem svg { width: 50px; height: 50px; }
+  h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--cream);
+    text-shadow: 0 0 40px rgba(200,168,75,0.3);
+    line-height: 1.1;
+  }
+  .subtitle {
+    margin-top: 0.6rem;
+    font-size: 1rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 300;
+    font-style: italic;
+  }
+
+  /* ── NAV ── */
+  nav {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem 1.5rem;
+    margin: 2.5rem 0;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  nav a {
+    color: var(--gold-light);
+    text-decoration: none;
+    padding: 0.2rem 0;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  nav a:hover { border-color: var(--gold); color: var(--cream); }
+
+  /* ── SECTION ── */
+  section { margin: 3.5rem 0; animation: fadeUp 0.6s ease both; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+  .section-header {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 1.8rem;
+  }
+  .section-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--green-mid), transparent);
+  }
+  h2 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  /* ── SOUNDS TABLE ── */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+  thead tr { border-bottom: 1px solid var(--green-mid); }
+  th {
+    padding: 0.6rem 1rem;
+    text-align: left;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    font-weight: 400;
+  }
+  td { padding: 0.5rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  tr:hover td { background: rgba(26,74,46,0.2); }
+  .ipa { font-family: 'JetBrains Mono', monospace; color: var(--gold-light); font-size: 0.85rem; }
+  .ortho { font-size: 1.1rem; font-weight: 600; color: var(--cream); }
+  .approx { color: var(--muted); font-style: italic; }
+
+  /* ── CARDS GRID ── */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+  .card {
+    background: rgba(26,74,46,0.12);
+    border: 1px solid rgba(200,168,75,0.15);
+    border-radius: 6px;
+    padding: 1.1rem 1.3rem;
+    transition: border-color 0.2s, background 0.2s, transform 0.2s;
+  }
+  .card:hover {
+    border-color: rgba(200,168,75,0.4);
+    background: rgba(26,74,46,0.25);
+    transform: translateY(-2px);
+  }
+  .word {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.85rem;
+    color: var(--gold-light);
+    letter-spacing: 0.06em;
+  }
+  .word-pron {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-left: 0.5rem;
+  }
+  .pos {
+    display: inline-block;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--green-light);
+    background: rgba(74,150,96,0.15);
+    border: 1px solid rgba(74,150,96,0.3);
+    border-radius: 3px;
+    padding: 0.1rem 0.45rem;
+    margin: 0.35rem 0 0.4rem;
+  }
+  .def { font-size: 0.92rem; color: rgba(245,240,232,0.85); line-height: 1.5; }
+
+  /* ── GRAMMAR BLOCKS ── */
+  .grammar-block {
+    background: rgba(26,74,46,0.1);
+    border-left: 3px solid var(--green-mid);
+    border-radius: 0 6px 6px 0;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1.2rem;
+  }
+  .grammar-block h3 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    margin-bottom: 0.7rem;
+  }
+  .grammar-block p, .grammar-block li { font-size: 0.95rem; color: rgba(245,240,232,0.85); margin-bottom: 0.3rem; }
+  .grammar-block ul { list-style: none; padding: 0; }
+  .grammar-block li::before { content: '◆ '; color: var(--green-light); font-size: 0.6rem; vertical-align: middle; }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(200,168,75,0.1);
+    border: 1px solid rgba(200,168,75,0.2);
+    border-radius: 3px;
+    padding: 0.1em 0.4em;
+    font-size: 0.85em;
+    color: var(--gold-light);
+  }
+
+  /* ── PRONOUN TABLE ── */
+  .pronoun-table th { font-size: 0.6rem; }
+  .pronoun-table td:first-child { color: var(--gold-light); font-style: italic; }
+
+  /* ── ROOTS ── */
+  .roots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.7rem; }
+  .root-item {
+    display: flex; align-items: baseline; gap: 0.6rem;
+    background: rgba(26,74,46,0.12);
+    border: 1px solid rgba(200,168,75,0.12);
+    border-radius: 4px;
+    padding: 0.5rem 0.9rem;
+  }
+  .root-key {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--gold-light);
+    white-space: nowrap;
+  }
+  .root-val { font-size: 0.88rem; color: rgba(245,240,232,0.7); font-style: italic; }
+
+  /* ── SEARCH ── */
+  .search-wrap { position: relative; margin-bottom: 1.5rem; }
+  .search-wrap input {
+    width: 100%;
+    background: rgba(26,74,46,0.15);
+    border: 1px solid rgba(200,168,75,0.25);
+    border-radius: 6px;
+    padding: 0.75rem 1rem 0.75rem 2.8rem;
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-wrap input::placeholder { color: var(--muted); }
+  .search-wrap input:focus { border-color: var(--gold); }
+  .search-icon {
+    position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%);
+    color: var(--muted); font-size: 0.9rem; pointer-events: none;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 5rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(200,168,75,0.15);
+    color: var(--muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 600px) {
+    .cards { grid-template-columns: 1fr; }
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 0.9rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HERO -->
+  <header class="hero">
+    <!-- ═══════════════════════════════════════════════════════
+         EMBLEM IMAGE — edit the src path to match your repo:
+           Same folder as index.html  →  "Tchroglich_Flag__1_.png"
+           In an assets/ folder       →  "assets/Tchroglich_Flag__1_.png"
+         ═══════════════════════════════════════════════════════ -->
+    <div class="emblem">
+      <img src="Tchroglich_Flag__1_.png" alt="Tchroglich emblem" />
+    </div>
+    <h1>Tchroglich</h1>
+    <p class="subtitle">A work-in-progress artlang</p>
+  </header>
+
+  <nav>
+    <a href="#sounds">Sounds</a>
+    <a href="#modifiers">Modifiers</a>
+    <a href="#grammar">Grammar</a>
+    <a href="#pronouns">Pronouns</a>
+    <a href="#lexicon">Lexicon</a>
+    <a href="#roots">Roots &amp; Affixes</a>
+  </nav>
+
+  <!-- SOUNDS -->
+  <section id="sounds">
+    <div class="section-header"><h2>Phonology</h2></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>IPA</th><th>Orthography</th><th>English Approximation</th></tr></thead>
+        <tbody>
+          <tr><td class="ipa">/æ/ — /eɪ/</td><td class="ortho">Aa — Áá</td><td class="approx">b<strong>a</strong>d — <strong>a</strong>te</td></tr>
+          <tr><td class="ipa">/ɛ/ — /iː/</td><td class="ortho">Ee — Éé</td><td class="approx">b<strong>e</strong>d — k<strong>ee</strong>p</td></tr>
+          <tr><td class="ipa">/ɪ/ — /aɪ/</td><td class="ortho">Ii — Íí</td><td class="approx">b<strong>i</strong>g — t<strong>ie</strong></td></tr>
+          <tr><td class="ipa">/ɔ/ — /oʊ/</td><td class="ortho">Oo — Óó</td><td class="approx">n<strong>o</strong>t — b<strong>oa</strong>t</td></tr>
+          <tr><td class="ipa">/ʌ/ — /uː/</td><td class="ortho">Uu — Úú</td><td class="approx">b<strong>u</strong>g — t<strong>oo</strong>th</td></tr>
+          <tr><td class="ipa">/b/</td><td class="ortho">Bb</td><td class="approx"><strong>B</strong>ubble</td></tr>
+          <tr><td class="ipa">/s/</td><td class="ortho">Cc</td><td class="approx"><strong>S</strong>ea</td></tr>
+          <tr><td class="ipa">/h/</td><td class="ortho">Hh</td><td class="approx"><strong>H</strong>eat</td></tr>
+          <tr><td class="ipa">/k/</td><td class="ortho">Kk</td><td class="approx"><strong>K</strong>ill</td></tr>
+          <tr><td class="ipa">/d/</td><td class="ortho">Dd</td><td class="approx"><strong>D</strong>eal</td></tr>
+          <tr><td class="ipa">/f/</td><td class="ortho">Ff</td><td class="approx"><strong>F</strong>ill</td></tr>
+          <tr><td class="ipa">/g/</td><td class="ortho">Gg</td><td class="approx"><strong>G</strong>ood</td></tr>
+          <tr><td class="ipa">/l/</td><td class="ortho">Ll</td><td class="approx"><strong>L</strong>og</td></tr>
+          <tr><td class="ipa">/m/</td><td class="ortho">Mm</td><td class="approx"><strong>M</strong>ile</td></tr>
+          <tr><td class="ipa">/n/</td><td class="ortho">Nn</td><td class="approx"><strong>N</strong>ugget</td></tr>
+          <tr><td class="ipa">/p/</td><td class="ortho">Pp</td><td class="approx"><strong>P</strong>uppet</td></tr>
+          <tr><td class="ipa">/r/</td><td class="ortho">Rr</td><td class="approx"><strong>R</strong>ide</td></tr>
+          <tr><td class="ipa">/t/</td><td class="ortho">Tt</td><td class="approx"><strong>T</strong>urret</td></tr>
+          <tr><td class="ipa">/v/</td><td class="ortho">Vv</td><td class="approx"><strong>V</strong>iolin</td></tr>
+          <tr><td class="ipa">/w/</td><td class="ortho">Ww</td><td class="approx"><strong>W</strong>in</td></tr>
+          <tr><td class="ipa">/z/</td><td class="ortho">Zz</td><td class="approx"><strong>Z</strong>ebra</td></tr>
+          <tr><td class="ipa">/j/</td><td class="ortho">Jj</td><td class="approx"><strong>Y</strong>es</td></tr>
+          <tr><td class="ipa">/tʃ/</td><td class="ortho">Tch / tch</td><td class="approx"><strong>Ch</strong>in</td></tr>
+          <tr><td class="ipa">/ʃ/</td><td class="ortho">Ch / ch</td><td class="approx"><strong>Sh</strong>in</td></tr>
+          <tr><td class="ipa">/dʒ/</td><td class="ortho">Dzh / dzh</td><td class="approx"><strong>G</strong>ym</td></tr>
+          <tr><td class="ipa">/ʒ/</td><td class="ortho">Zh / zh</td><td class="approx">mea<strong>s</strong>ure</td></tr>
+          <tr><td class="ipa">/θ/</td><td class="ortho">Th / th</td><td class="approx"><strong>Th</strong>ink</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- MODIFIERS -->
+  <section id="modifiers">
+    <div class="section-header"><h2>Word Modifiers</h2></div>
+    <div class="grammar-block">
+      <h3>The Apostrophe Syllable Marker</h3>
+      <p><code>an ' (apostrophe)</code> — makes the schwa sound and begins a new syllable.</p>
+    </div>
+    <div class="grammar-block">
+      <h3>Tense Modifiers (verb &amp; copula)</h3>
+      <ul>
+        <li><code>p'-</code> Past tense modifier</li>
+        <li><code>k'-</code> Future tense modifier</li>
+        <li><code>t'-</code> Present tense modifier</li>
+      </ul>
+      <p style="margin-top:0.7rem; font-size:0.88rem; color:var(--muted); font-style:italic;">Tense modifiers are unneeded unless you have been referring to a different tense. They continue to apply until a new modifier is added.</p>
+    </div>
+    <div class="grammar-block">
+      <h3>Other Modifiers</h3>
+      <ul>
+        <li><code>b'-</code> Possessive pronoun modifier — added at the beginning of a pronoun</li>
+        <li><code>w'-</code> Pluralizing modifier — added at the beginning of a word</li>
+        <li><code>g'-</code> Transitive modifier — indicates the subject made something else perform the verb; may be inferred from context</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- GRAMMAR -->
+  <section id="grammar">
+    <div class="section-header"><h2>Grammar</h2></div>
+    <div class="grammar-block">
+      <h3>Sentence Structure</h3>
+      <ul>
+        <li>Word order: <code>SVO</code> (Subject — Verb — Object)</li>
+        <li>Adjective order: <code>N/V — Adj/Adv</code> (noun/verb before its modifier)</li>
+      </ul>
+    </div>
+    <div class="grammar-block">
+      <h3>Full Sentence Pattern</h3>
+      <p style="font-size:0.88rem; font-family:'JetBrains Mono',monospace; color:var(--gold-light); line-height:1.9;">
+        (det + Subject + adjectives) / (púmin + adjectives)<br>
+        + (det + Modifier + copula) / (púvem)<br>
+        + (negation + Verb + adverb)<br>
+        + (púgmu? yes/no indicator)<br>
+        + ( . ? ! )
+      </p>
+    </div>
+    <div class="grammar-block">
+      <h3>Dialogue Pattern</h3>
+      <p style="font-size:0.88rem; font-family:'JetBrains Mono',monospace; color:var(--gold-light);">
+        (subject + adj) + (verb:tekel + adv) + « speech . ? ! »
+      </p>
+    </div>
+    <div class="grammar-block">
+      <h3>Copula — <code>kut</code></h3>
+      <ul>
+        <li>Non-verbal predicates (adjectives, nouns) require the copula <code>kut</code>. Tense is marked on it.</li>
+        <li>Verbal predicates use the verb directly — no copula needed. Tense prefix is applied to the verb.</li>
+      </ul>
+      <p style="margin-top:0.8rem; font-size:0.9rem;">
+        <code>Femin kut [adj]</code> — "She is [adj]"<br>
+        <code>Femin p'kut [adj]</code> — "She was [adj]"<br>
+        <code>Femin gúkel</code> — "She cooks"<br>
+        <code>Femin t'gúkel</code> — "She is cooking" (tense explicit)
+      </p>
+    </div>
+    <div class="grammar-block">
+      <h3>Question Words</h3>
+      <ul>
+        <li><code>Púmin</code> — who / what (subject question)</li>
+        <li><code>Púvem</code> — what verb?</li>
+        <li><code>Púgmu</code> — yes/no question indicator</li>
+        <li><code>Púkemel</code> — why / for what reason</li>
+        <li><code>Púkolé</code> — when</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- PRONOUNS -->
+  <section id="pronouns">
+    <div class="section-header"><h2>Pronouns</h2></div>
+    <div class="table-wrap">
+      <table class="pronoun-table">
+        <thead>
+          <tr>
+            <th>Person</th>
+            <th>Singular</th>
+            <th>Plural</th>
+            <th>Possessive</th>
+            <th>Plural Possessive</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1st</td><td class="ipa">dzhrak</td><td class="ipa">w'dzhrak</td><td class="ipa">b'dzhrak</td><td class="ipa">w'b'dzhrak</td></tr>
+          <tr><td>2nd</td><td class="ipa">hot</td><td class="ipa">w'hot</td><td class="ipa">b'hot</td><td class="ipa">w'b'hot</td></tr>
+          <tr><td>3rd Masc</td><td class="ipa">tómin</td><td class="ipa">w'tómin</td><td class="ipa">b'tómin</td><td class="ipa">w'b'tómin</td></tr>
+          <tr><td>3rd Fem</td><td class="ipa">femin</td><td class="ipa">w'femin</td><td class="ipa">b'femin</td><td class="ipa">w'b'femin</td></tr>
+          <tr><td>3rd Neuter</td><td class="ipa">númin</td><td class="ipa">w'númin</td><td class="ipa">b'númin</td><td class="ipa">w'b'númin</td></tr>
+          <tr><td>Distal Demo</td><td class="ipa">kremin</td><td class="ipa">w'kremin</td><td class="ipa">b'kremin</td><td class="ipa">w'b'kremin</td></tr>
+          <tr><td>Proximal Demo</td><td class="ipa">helmin</td><td class="ipa">w'helmin</td><td class="ipa">b'helmin</td><td class="ipa">w'b'helmin</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- LEXICON -->
+  <section id="lexicon">
+    <div class="section-header"><h2>Lexicon</h2></div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="lexSearch" placeholder="Search words, definitions…" oninput="filterLex()" />
+    </div>
+    <div class="cards" id="lexCards">
+      <!-- JS renders these -->
+    </div>
+  </section>
+
+  <!-- ROOTS -->
+  <section id="roots">
+    <div class="section-header"><h2>Roots, Prefixes &amp; Suffixes</h2></div>
+    <div class="roots-grid" id="rootsGrid"></div>
+  </section>
+
+  <footer>Tchroglich — A Work in Progress Artlang &nbsp;·&nbsp; Reference Document</footer>
+</div>
+
+<script>
+const lexicon = [
+  { word: "bilénu", pron: null, pos: "verb", def: "To boil; to cook by immersing in boiling water or stock" },
+  { word: "cpugeté", pron: "/spʌˈgɛtiː/", pos: "noun", def: "Spaghetti (loanword)" },
+  { word: "dzhratchú-", pron: null, pos: "noun", def: "Food" },
+  { word: "dú-", pron: null, pos: "verb", def: "To move from one place to another without specifying purpose" },
+  { word: "dúté-", pron: null, pos: "verb", def: "To move to a different place while indicating purpose or context" },
+  { word: "Elen-", pron: null, pos: "noun", def: "Number" },
+  { word: "étuk", pron: "/ˈiː.teɪk/", pos: "verb", def: "To consume; eat" },
+  { word: "fepen", pron: null, pos: "noun", def: "Mother" },
+  { word: "ferund", pron: null, pos: "noun", def: "Sister" },
+  { word: "gúkel-", pron: null, pos: "verb", def: "To cook" },
+  { word: "grepádé-", pron: null, pos: "adj/adv", def: "Sufficient; sufficiently; enough" },
+  { word: "grót", pron: "/ˈgroʊt/", pos: "determiner", def: "Denotes previously mentioned or commonly known things" },
+  { word: "héléó-", pron: null, pos: "verb", def: "To create melodic vocal sound" },
+  { word: "hútúlu-", pron: null, pos: "verb", def: "To appear as" },
+  { word: "hóje-", pron: null, pos: "verb", def: "To open" },
+  { word: "jin", pron: null, pos: "preposition", def: "Within; inside; in" },
+  { word: "jetel", pron: null, pos: "adj/adv", def: "Good; desirable; well" },
+  { word: "jétádzh-", pron: null, pos: "noun", def: "Tree" },
+  { word: "jútéde-", pron: null, pos: "noun", def: "Path; road" },
+  { word: "júkén-", pron: null, pos: "verb", def: "To rise" },
+  { word: "Júkelu-", pron: null, pos: "adjective", def: "All; every" },
+  { word: "Jukelu-", pron: null, pos: "adjective", def: "Many" },
+  { word: "Júnítid Ctátc", pron: null, pos: "noun", def: "United States (loanword)" },
+  { word: "kérká-", pron: null, pos: "noun", def: "Bird" },
+  { word: "kérc-", pron: null, pos: "noun", def: "Eye" },
+  { word: "kécéc-", pron: null, pos: "verb", def: "To look" },
+  { word: "ké", pron: null, pos: "conjunction", def: "And; together with; as well as" },
+  { word: "Kéte-", pron: null, pos: "adjective", def: "Flimsy; bendy" },
+  { word: "kintenin-", pron: null, pos: "noun", def: "Mountain" },
+  { word: "Kolée-", pron: null, pos: "noun", def: "Time" },
+  { word: "Kolépót-", pron: null, pos: "noun", def: "Second" },
+  { word: "Kolétchu-", pron: null, pos: "noun", def: "Minute" },
+  { word: "Koléloch-", pron: null, pos: "noun", def: "Hour" },
+  { word: "Koléjin", pron: null, pos: "preposition", def: "During" },
+  { word: "Koléjúk", pron: null, pos: "noun", def: "Morning" },
+  { word: "krep-", pron: null, pos: "verb", def: "Retrieve; fetch; receive; get" },
+  { word: "krepel-", pron: null, pos: "adjective", def: "Hot (temperature)" },
+  { word: "krúptéru-", pron: null, pos: "noun", def: "Sun" },
+  { word: "kwópu-", pron: null, pos: "adjective", def: "Quiet" },
+  { word: "lotámu-", pron: null, pos: "verb", def: "To sleep" },
+  { word: "minléó-", pron: null, pos: "verb", def: "To speak" },
+  { word: "Min", pron: null, pos: "noun", def: "Person" },
+  { word: "nef", pron: null, pos: "det/excl/adv/noun", def: "None; negative reply; not at all; a negative answer" },
+  { word: "njum-", pron: null, pos: "noun", def: "Moon" },
+  { word: "ópát", pron: null, pos: "adverb", def: "In the direction of" },
+  { word: "péken", pron: null, pos: "preposition", def: "Outside" },
+  { word: "pétzu-", pron: null, pos: "noun", def: "Pizza" },
+  { word: "pin-", pron: null, pos: "root", def: "Animals" },
+  { word: "póen-", pron: null, pos: "noun", def: "An unspecified day" },
+  { word: "póenák-", pron: null, pos: "noun", def: "The next day" },
+  { word: "póenáp-", pron: null, pos: "noun", def: "The previous day" },
+  { word: "póenát-", pron: null, pos: "noun", def: "The current day" },
+  { word: "pópkú", pron: null, pos: "preposition", def: "Above; on top of" },
+  { word: "Pomlen-", pron: null, pos: "adj/noun/adv", def: "One; once" },
+  { word: "postu-", pron: null, pos: "noun", def: "Pasta" },
+  { word: "rékek-", pron: null, pos: "noun", def: "Natural stream" },
+  { word: "retkén-", pron: null, pos: "verb", def: "To set; lower" },
+  { word: "tindo-", pron: null, pos: "noun", def: "Window; transparent glass" },
+  { word: "Telpinkét-", pron: null, pos: "noun", def: "Fish" },
+  { word: "Tcheloch-", pron: null, pos: "adjective", def: "Big" },
+  { word: "Tchepót-", pron: null, pos: "adjective", def: "Small" },
+  { word: "Tchetén-", pron: null, pos: "adjective", def: "Long" },
+  { word: "Tchetjú-", pron: null, pos: "adjective", def: "Short" },
+  { word: "te", pron: null, pos: "particle", def: "Links a preposition to its object" },
+  { word: "tópen", pron: null, pos: "noun", def: "Father" },
+  { word: "tórund", pron: null, pos: "noun", def: "Brother" },
+  { word: "Júlép", pron: null, pos: "noun", def: "Waste; trash" },
+  { word: "Júlép lon", pron: null, pos: "noun", def: "Raccoon" },
+  { word: "Itjúpé", pron: null, pos: "verb", def: "To favor" },
+  { word: "Tchrom", pron: null, pos: "preposition", def: "To (as in \"Give a pencil to me\")" },
+  { word: "Pírek", pron: null, pos: "conjunction", def: "Or" },
+  { word: "Lógelnu", pron: null, pos: "conjunction", def: "However; but" },
+  { word: "Heplek", pron: null, pos: "conjunction", def: "For the reason that" },
+  { word: "Geljenké", pron: null, pos: "conjunction", def: "In the case that; if" },
+  { word: "Lómtú", pron: null, pos: "prep/adj/adv", def: "In this place; here" },
+];
+
+const roots = [
+  { key: "-ák", val: "suffix — future" },
+  { key: "-áp", val: "suffix — past" },
+  { key: "-át", val: "suffix — present" },
+  { key: "-két / Két-", val: "marker — bendy; flexible" },
+  { key: "-len", val: "suffix — numbers" },
+  { key: "-léó", val: "suffix — sound; vocalization" },
+  { key: "-loch", val: "suffix — largeness" },
+  { key: "-lu", val: "suffix — amount; totality" },
+  { key: "-pen", val: "suffix — parent" },
+  { key: "-pót", val: "suffix — smallness" },
+  { key: "-rund", val: "suffix — sibling" },
+  { key: "hé-", val: "root — melody; rhythm" },
+  { key: "Jukét-", val: "root — quantity" },
+  { key: "Kolé-", val: "root — time" },
+  { key: "min-", val: "root — people" },
+  { key: "pin-", val: "root — animals" },
+  { key: "Póen-", val: "root — days" },
+  { key: "tel-", val: "root — water" },
+  { key: "Tche-", val: "root — size" },
+  { key: "Fe-", val: "prefix — feminine" },
+  { key: "Tó-", val: "prefix — masculine" },
+];
+
+function renderLex(items) {
+  const container = document.getElementById('lexCards');
+  container.innerHTML = items.map(e => `
+    <div class="card">
+      <div><span class="word">${e.word}</span>${e.pron ? `<span class="word-pron">${e.pron}</span>` : ''}</div>
+      <div><span class="pos">${e.pos}</span></div>
+      <div class="def">${e.def}</div>
+    </div>
+  `).join('');
+}
+
+function filterLex() {
+  const q = document.getElementById('lexSearch').value.toLowerCase();
+  renderLex(q ? lexicon.filter(e => e.word.toLowerCase().includes(q) || e.def.toLowerCase().includes(q) || e.pos.toLowerCase().includes(q)) : lexicon);
+}
+
+function renderRoots() {
+  document.getElementById('rootsGrid').innerHTML = roots.map(r => `
+    <div class="root-item"><span class="root-key">${r.key}</span><span class="root-val">${r.val}</span></div>
+  `).join('');
+}
+
+renderLex(lexicon);
+renderRoots();
+</script>
+</body>
+</html>
