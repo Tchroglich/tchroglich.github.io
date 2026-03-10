@@ -59,17 +59,15 @@
     margin: 2.5rem auto 0;
   }
   .emblem {
-    width: 110px; height: 110px;
-    border-radius: 50%;
     display: inline-flex; align-items: center; justify-content: center;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 0 30px rgba(200,168,75,0.2), 0 0 60px rgba(26,74,46,0.4);
+    margin-bottom: 0.5rem;
     animation: glowPulse 4s ease-in-out infinite;
-    overflow: hidden;
   }
   .emblem img {
-    width: 100%; height: 100%;
+    width: 260px;
+    height: auto;
     object-fit: contain;
+    filter: drop-shadow(0 0 20px rgba(200,168,75,0.2));
   }
   @keyframes glowPulse {
     0%, 100% { box-shadow: 0 0 30px rgba(200,168,75,0.2), 0 0 60px rgba(26,74,46,0.4); }
@@ -290,8 +288,13 @@
 
   <!-- HERO -->
   <header class="hero">
+    <!-- ═══════════════════════════════════════════════════════
+         EMBLEM IMAGE — edit the src path to match your repo:
+           Same folder as index.html  →  "Tchroglich_Flag__1_.png"
+           In an assets/ folder       →  "assets/Tchroglich_Flag__1_.png"
+         ═══════════════════════════════════════════════════════ -->
     <div class="emblem">
-      <img src="Tchroglich.png" alt="Tchroglich emblem" />
+      <img src="Tchroglich_Flag__1_.png" alt="Tchroglich emblem" />
     </div>
     <h1>Tchroglich</h1>
     <p class="subtitle">A work-in-progress artlang</p>
